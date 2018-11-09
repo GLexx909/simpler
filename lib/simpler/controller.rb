@@ -33,8 +33,7 @@ module Simpler
     end
 
     def write_response
-      body = render_body
-
+      body = @request.env['simpler.render_plain'] || render_body
       @response.write(body)
     end
 
@@ -43,11 +42,31 @@ module Simpler
     end
 
     def params
-      @request.params
+      path = @request.env['REQUEST_PATH']
+      id = path.split('/').last.to_i
+      @request.params[:id] = id
+      {id: id}
     end
 
-    def render(template)
-      @request.env['simpler.template'] = template
+    def render(data)
+      method_definition(data)
+    end
+
+    def method_definition(data)
+      if data.is_a?(String)
+        @request.env['simpler.template'] = data
+      else  # if data is {method: 'params'}
+        data.each { |method, value| send(method, value) }
+      end
+
+    end
+
+    def plain(value)
+      @request.env['simpler.render_plain'] = value
+    end
+
+    def status(value)
+      @response.status = value
     end
 
   end
