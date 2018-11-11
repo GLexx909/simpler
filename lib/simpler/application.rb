@@ -28,7 +28,7 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
-      [404, { 'Content-Type' => 'text/plain' }, ['Template not found. 404']] unless route
+      return [404, { 'Content-Type' => 'text/plain' }, ['Template not found. 404']] unless route
 
       controller = route.controller.new(env)
       action = route.action

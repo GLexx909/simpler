@@ -46,12 +46,15 @@ module Simpler
       path_arr = path.split('/')
       @request.env['REQUEST_PARAMS'] = {}
 
+      # Name of primary_key of Table
+      primary_key = Simpler.application.db[@name.to_sym].columns[0]
+
       # Add parameters to @request.env['REQUEST_PARAMS'] as hash
       path_arr.each_with_index do |element, index|
-        @request.env['REQUEST_PARAMS'][element]=path_arr[index+1] if (element.to_i==0 && path_arr[index+1].to_i>0)
+        @request.env['REQUEST_PARAMS'][primary_key]=path_arr[index+1].to_i if (element.to_i==0 && path_arr[index+1].to_i>0)
       end
+
       @request.env['REQUEST_PARAMS'].merge!(@request.params)
-    # Не знаю, как :id или :test_id выдавать/различать по запросу в контроллере.
     end
 
     def render(data)

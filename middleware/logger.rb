@@ -26,6 +26,7 @@ class AppLogger
     controller_name = (controller.name if controller)  || 'Bad request'
 
     <<-HEREDOC
+    
     Request: #{method} #{adress}
     Handler: #{controller_class}##{action}
     Parameters: #{params}
