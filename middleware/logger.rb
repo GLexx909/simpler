@@ -21,15 +21,16 @@ class AppLogger
     controller = env['simpler.controller']
     controller_class = controller.class
     action = env['simpler.action'] || 'Bad request'
-    params = (controller.request.params if controller)  || '{}'
+    params = env['REQUEST_PARAMS'] || '{}'
     headers = headers['Content-Type']
     controller_name = (controller.name if controller)  || 'Bad request'
-    "
+
+    <<-HEREDOC
     Request: #{method} #{adress}
     Handler: #{controller_class}##{action}
     Parameters: #{params}
     Response: #{status} [#{headers}] #{controller_name}/#{action}.html.erb
-    "
+    HEREDOC
   end
 
 end

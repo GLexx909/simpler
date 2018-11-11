@@ -43,22 +43,23 @@ module Simpler
 
     def params
       path = @request.env['REQUEST_PATH']
-      id = path.split('/').last.to_i
-      @request.params[:id] = id
-      {id: id}
+      path_arr = path.split('/')
+      @request.env['REQUEST_PARAMS'] = {}
+
+      # Add parameters to @request.env['REQUEST_PARAMS'] as hash
+      path_arr.each_with_index do |element, index|
+        @request.env['REQUEST_PARAMS'][element]=path_arr[index+1] if (element.to_i==0 && path_arr[index+1].to_i>0)
+      end
+      @request.env['REQUEST_PARAMS'].merge!(@request.params)
+    # Не знаю, как :id или :test_id выдавать/различать по запросу в контроллере.
     end
 
     def render(data)
-      method_definition(data)
-    end
-
-    def method_definition(data)
       if data.is_a?(String)
         @request.env['simpler.template'] = data
       else  # if data is {method: 'params'}
         data.each { |method, value| send(method, value) }
       end
-
     end
 
     def plain(value)

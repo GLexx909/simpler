@@ -13,7 +13,7 @@ module Simpler
 
       def match?(method, path)
         path = path_detect(path)
-        @method == method && path.match?(/^#{@path}$/)
+        @method == method && path.match?(/^#{@path}$/) # Знаю, что не правильно
       end
 
       def path_detect(path)
