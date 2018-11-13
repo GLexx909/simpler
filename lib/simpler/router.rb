@@ -18,20 +18,26 @@ module Simpler
     def route_for(env)
       method = env['REQUEST_METHOD'].downcase.to_sym
       path = env['PATH_INFO']
-      path = env['REQUEST_PATH']
-      path_arr = path.split('/')
       env['REQUEST_PARAMS'] = {}
-      table_name = path_arr[1]
+      @env_path_arr = path.split('/')
 
-      # Name of primary_key of Table
-      primary_key = Simpler.application.db[table_name.to_sym].columns[0]
+      route_found = @routes.find { |route| route.match?(method, path) }
 
-      # Add parameters to env['REQUEST_PARAMS'] as hash
-      path_arr.each_with_index do |element, index|
-        env['REQUEST_PARAMS'][primary_key]=path_arr[index+1].to_i if (element.to_i==0 && path_arr[index+1].to_i>0)
+      # get keys for env_params
+      params = {}
+      route_found.path.split('/').map.with_index do |part, index|
+        if part.match?(':')
+          params[part.delete(':').to_sym] = index
+        end
       end
 
-      @routes.find { |route| route.match?(method, path) }
+      # get and add values for env_params
+      params.each do |key, val|
+        value = @env_path_arr[val]
+        env['REQUEST_PARAMS'][key] = value.to_i
+      end
+
+      route_found
     end
 
     private

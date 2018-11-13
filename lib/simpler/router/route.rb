@@ -2,7 +2,7 @@ module Simpler
   class Router
     class Route
 
-      attr_reader :controller, :action
+      attr_reader :controller, :action, :path
 
       def initialize(method, path, controller, action)
         @method = method
@@ -12,19 +12,23 @@ module Simpler
       end
 
       def match?(method, path)
-        path = path_detect(path)
-        @method == method && path.match?(/^#{@path}$/) # Знаю, что не правильно
+        path_init = path_detect(@path)
+
+        @method == method && same_length?(path) && path.match?(/^#{path_init}/)
       end
 
       def path_detect(path)
-        path_array = path.split('/')
-        if path_array.last.to_i > 0
-          path_array.pop
-          path_array << ':id'
-          path_array.join('/')
-        else
-          path
+        path_arr = path.split('/')
+        path_arr.map.with_index do |part, index|
+          if part.match?(':')
+            path_arr[index] = '.*'
+          end
         end
+        path_arr.join('/')
+      end
+
+      def same_length?(path)
+        path.split('/').length == @path.split('/').length
       end
 
     end

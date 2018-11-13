@@ -23,10 +23,10 @@ class AppLogger
     action = env['simpler.action'] || 'Bad request'
     params = env['REQUEST_PARAMS'] || '{}'
     headers = headers['Content-Type']
-    controller_name = (controller.name if controller)  || 'Bad request'
+    controller_name = (controller&.name)  || 'Bad request'
 
     <<-HEREDOC
-    
+
     Request: #{method} #{adress}
     Handler: #{controller_class}##{action}
     Parameters: #{params}
