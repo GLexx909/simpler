@@ -17,13 +17,11 @@ module Simpler
         @method == method && same_length?(path) && path.match?(/^#{path_init}/)
       end
 
+      private
+
       def path_detect(path)
         path_arr = path.split('/')
-        path_arr.map.with_index do |part, index|
-          if part.match?(':')
-            path_arr[index] = '.*'
-          end
-        end
+        path_arr.map {|part| part.replace('.*') if part.match?(':')}
         path_arr.join('/')
       end
 

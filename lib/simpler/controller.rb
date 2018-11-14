@@ -42,7 +42,7 @@ module Simpler
     end
 
     def params
-      @request.env['REQUEST_PARAMS'].merge!(@request.params)
+      @request.env['simpler.route_params'].merge!(@request.params) #  @request.params вернёт hash всех GET & POST parameters?
     end
 
     def render(data)

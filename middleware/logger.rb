@@ -21,7 +21,7 @@ class AppLogger
     controller = env['simpler.controller']
     controller_class = controller.class
     action = env['simpler.action'] || 'Bad request'
-    params = env['REQUEST_PARAMS'] || '{}'
+    params = env['simpler.route_params'] || '{}'
     headers = headers['Content-Type']
     controller_name = (controller&.name)  || 'Bad request'
 
