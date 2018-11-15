@@ -19,21 +19,14 @@ module Simpler
       method = env['REQUEST_METHOD'].downcase.to_sym
       path = env['PATH_INFO']
       env['simpler.route_params'] = {}
-      @env_path_arr = path.split('/')
+      env_path_arr = path.split('/')
 
       route_found = @routes.find { |route| route.match?(method, path) }
+      return if route_found.nil?
 
       # get keys for env_params
-      if route_found
-        route_found.path.split('/').map.with_index do |part, index|
-          env['simpler.route_params'][part.delete(':').to_sym] = index if part.match?(':')
-        end
-
-        # get and add values for env_params
-        env['simpler.route_params'].each do |key, val|
-          value = @env_path_arr[val]
-          env['simpler.route_params'][key] = value.match?(/[^\d]/) ? value : value.to_i
-        end
+      route_found.path.split('/').map.with_index do |part, index|
+        env['simpler.route_params'][part.delete(':').to_sym] = env_path_arr[index] if part.match?(':')
       end
 
       route_found

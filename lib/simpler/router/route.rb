@@ -14,7 +14,7 @@ module Simpler
       def match?(method, path)
         path_init = path_detect(@path)
 
-        @method == method && same_length?(path) && path.match?(/^#{path_init}/)
+        @method == method && same_length?(path) && (/^#{path_init}$/).match?(path) && path.match?(/^#{path_init}/)
       end
 
       private
