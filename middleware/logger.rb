@@ -19,9 +19,13 @@ class AppLogger
     method = env['REQUEST_METHOD']
     adress = env['PATH_INFO']
     controller = env['simpler.controller']
+
     controller_class = controller.class
     action = env['simpler.action'] || 'Bad request'
-    params = env['simpler.all_params'] || '{}'
+
+    params = {}.merge!(env['simpler.route_params'])
+    params.merge!(controller.request.params) || '{}' if controller
+
     headers = headers['Content-Type']
     controller_name = (controller&.name)  || 'Bad request'
 

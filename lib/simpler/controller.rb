@@ -42,12 +42,8 @@ module Simpler
     end
 
     def params
-      @request.env['simpler.request_params'] = @request.params
-
-      @request.env['simpler.all_params'].merge!(@request.params)
-      @request.env['simpler.all_params'].merge!(@request.env['simpler.route_params'])
-
-      @request.env['simpler.route_params']
+      params = {}.merge!(@request.params)
+      params.merge!(@request.env['simpler.route_params'])
     end
 
     def render(data)
