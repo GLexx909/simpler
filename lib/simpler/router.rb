@@ -26,7 +26,7 @@ module Simpler
 
       # get keys for env_params
       route_found.path.split('/').each.with_index do |part, index|
-        env['simpler.route_params'][part.delete(':').to_sym] = env_path_arr[index] if part.match?(':')
+        env['simpler.route_params'][part.delete(':').to_sym] = env_path_arr[index].to_i if part.match?(':')
       end
 
       route_found

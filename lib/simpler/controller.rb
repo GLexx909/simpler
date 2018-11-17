@@ -22,6 +22,10 @@ module Simpler
       @response.finish
     end
 
+    def params
+      @request.params.merge(@request.env['simpler.route_params'])
+    end
+
     private
 
     def extract_name
@@ -41,10 +45,6 @@ module Simpler
       @request.env['simpler.render_plain'] || View.new(@request.env).render(binding)
     end
 
-    def params
-      params = {}.merge!(@request.params)
-      params.merge!(@request.env['simpler.route_params'])
-    end
 
     def render(data)
       if data.is_a?(String)
